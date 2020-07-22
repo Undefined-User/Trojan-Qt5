@@ -1,8 +1,11 @@
 #include "advancemodesettingsdialog.h"
 #include "ui_advancemodesettingsdialog.h"
+#include "utils.h"
 #include "modehelper.h"
+#include "ui/modeeditdialog.h"
 
 #include <QListView>
+#include <QDir>
 
 AdvanceModeSettingsDialog::AdvanceModeSettingsDialog(ConfigHelper *ch, QWidget *parent) :
     QDialog(parent),
@@ -37,6 +40,19 @@ AdvanceModeSettingsDialog::~AdvanceModeSettingsDialog()
     delete ui;
 }
 
+void AdvanceModeSettingsDialog::refresh()
+{
+    ui->redirectorModeCB->clear();
+    ui->redirectorModeCB->addItems(ModeHelper::listAllModes());
+    ui->redirectorModeCB->setCurrentText(helper->getModeSettings().redirectorMode);
+}
+
+void AdvanceModeSettingsDialog::deleteMode()
+{
+    QString path = QDir::toNativeSeparators(Utils::getConfigPath() + "/mode/" + ui->redirectorModeCB->currentText() + ".json");
+    QFile::remove(path);
+}
+
 void AdvanceModeSettingsDialog::onAccepted()
 {
     TUNTAPSettings tSettings = helper->getTUNTAPSettings();
@@ -58,4 +74,27 @@ void AdvanceModeSettingsDialog::onAccepted()
     helper->setAdvanceModeSettings(tSettings, sSettings, mSettings);
 
     this->accept();
+}
+
+void AdvanceModeSettingsDialog::on_addBtn_clicked()
+{
+    ModeEditDialog *modeDlg = new ModeEditDialog();
+    if (modeDlg->exec()) {
+        refresh();
+    }
+}
+
+void AdvanceModeSettingsDialog::on_editBtn_clicked()
+{
+    ModeEditDialog *modeDlg = new ModeEditDialog();
+    if (modeDlg->onEdit(ui->redirectorModeCB->currentText(), ModeHelper::readProcessToList(ui->redirectorModeCB->currentText()))) {
+        refresh();
+    }
+}
+
+
+void AdvanceModeSettingsDialog::on_deleteBtn_clicked()
+{
+    deleteMode();
+    refresh();
 }

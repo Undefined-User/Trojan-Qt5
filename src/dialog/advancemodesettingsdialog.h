@@ -20,8 +20,14 @@ private:
     Ui::AdvanceModeSettingsDialog *ui;
     ConfigHelper *helper;
 
+    void refresh();
+    void deleteMode();
+
 private slots:
     void onAccepted();
+    void on_addBtn_clicked();
+    void on_editBtn_clicked();
+    void on_deleteBtn_clicked();
 };
 
 #endif // ADVANCEMODESETTINGSDIALOG_H

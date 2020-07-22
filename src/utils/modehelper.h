@@ -11,6 +11,7 @@ public:
 
     static QStringList listAllModes();
     static QString readProcess(QString name);
+    static QStringList readProcessToList(QString name);
 };
 
 #endif // MODEHELPER_H

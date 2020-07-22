@@ -276,7 +276,8 @@ SOURCES += \
     src/socketstream.cpp \
     src/extension/clickablelabel.cpp \
     src/extension/qtcolorpicker.cpp \
-    src/widget/trojangowidget.cpp
+    src/widget/trojangowidget.cpp \
+    ui/modeeditdialog.cpp
 
 HEADERS += \
     src/dialog/aboutdialog.h \
@@ -353,10 +354,12 @@ HEADERS += \
     src/socketstream.h \
     src/extension/clickablelabel.h \
     src/extension/qtcolorpicker.h \
-    src/widget/trojangowidget.h
+    src/widget/trojangowidget.h \
+    ui/modeeditdialog.h
 
 FORMS += \
     ui/advancemodesettingsdialog.ui \
+    ui/modeeditdialog.ui \
     ui/naiveproxyeditdialog.ui \
     ui/httpeditdialog.ui \
     ui/socks5editdialog.ui \

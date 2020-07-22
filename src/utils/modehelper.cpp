@@ -38,3 +38,22 @@ QString ModeHelper::readProcess(QString name)
     process = process % "NatTypeTester.exe";
     return process;
 }
+
+QStringList ModeHelper::readProcessToList(QString name)
+{
+    QString path = QDir::toNativeSeparators(Utils::getConfigPath() + "/mode");
+    QString fileName = QDir::toNativeSeparators(path % "/" % name % ".json");
+    QFile jsonFile(fileName);
+    jsonFile.open(QFile::ReadOnly | QFile::Text);
+    QJsonDocument doc = QJsonDocument::fromJson(jsonFile.readAll());
+    QJsonObject object = doc.object();
+    QJsonArray array = object["process"].toArray();
+    QStringList process;
+
+    for (QJsonValue val : array) {
+        QString data = val.toString();
+        process.append(data);
+    }
+
+    return process;
+}
