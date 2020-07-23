@@ -20,8 +20,9 @@ public:
     void stop();
 
 private:
+#if defined (Q_OS_WIN)
     PROCESS_INFORMATION piProcessInfo;
-
+#endif
 };
 
 #endif // NFSDK2CONTROLLER_H

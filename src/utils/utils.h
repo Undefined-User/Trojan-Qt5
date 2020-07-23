@@ -36,7 +36,9 @@ public:
     static QList<WsHeader> convertQJsonObject(const QJsonObject &object);
     static QJsonObject convertWsHeader(QList<WsHeader> headers);
 
+#if defined (Q_OS_WIN)
     static PROCESS_INFORMATION createProcessWithoutWindow(QString application, QString arg);
+#endif
 
     static QString getSystemDirectory();
     static QString getSystemVersion();

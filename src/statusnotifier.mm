@@ -131,10 +131,12 @@ void StatusNotifier::initActions()
     copyTerminalProxyCommandMenu = new QMenu(tr("Copy terminal proxy command"));
     setProxyToTelegram = new QAction(tr("Set Proxy to Telegram"));
 
-    terminalWinStyle = new QAction(tr("Copy as Windows Style"));
+    terminalWinCmdStyle = new QAction(tr("Copy as Windows Cmd Style"));
+    terminalWinPowerShellStyle = new QAction(tr("Copy as Windows PowerShell Style"));
     terminalUnixStyle = new QAction(tr("Copy as Unix Style"));
 
-    copyTerminalProxyCommandMenu->addAction(terminalWinStyle);
+    copyTerminalProxyCommandMenu->addAction(terminalWinCmdStyle);
+    copyTerminalProxyCommandMenu->addAction(terminalWinPowerShellStyle);
     copyTerminalProxyCommandMenu->addAction(terminalUnixStyle);
 
     //setup systray Menu
@@ -178,7 +180,8 @@ void StatusNotifier::initConnections()
     connect(updateSubscribe, &QAction::triggered, this, &StatusNotifier::onUpdateSubscribeWithProxy);
     connect(updateSubscribeBypass, &QAction::triggered, this, &StatusNotifier::onUpdateSubscribe);
     connect(serverSpeedPlot, &QAction::triggered, this, [this]() { showServerSpeedPlot(); });
-    connect(terminalWinStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("windows"); });
+    connect(terminalWinCmdStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("windows_cmd"); });
+    connect(terminalWinPowerShellStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("windows_powershell"); });
     connect(terminalUnixStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("unix"); });
     connect(setProxyToTelegram, &QAction::triggered, this, [this]() { onSetProxyToTelegram(); });
 }

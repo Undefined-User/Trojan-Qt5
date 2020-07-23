@@ -1,7 +1,9 @@
+#if defined (Q_OS_WIN)
 #include <Windows.h>
 #include "ServiceController.h"
 #include "nfapi.h"
 #include "nfevents.h"
+#endif
 
 #include "nfsdk2helper.h"
 #include "utils.h"
@@ -12,6 +14,7 @@ NFSDK2Helper::NFSDK2Helper()
 
 bool NFSDK2Helper::installDriver()
 {
+#if defined (Q_OS_WIN)
     QString _driverPath = Utils::getSystemDirectory() + "\\drivers\\netfilter2.sys";
 
     QString version = Utils::getSystemVersion();
@@ -33,10 +36,14 @@ bool NFSDK2Helper::installDriver()
     }
 
     return true;
+#else
+    return false;
+#endif
 }
 
 bool NFSDK2Helper::uninstallDriver()
 {
+#if defined (Q_OS_WIN)
     QString _driverPath = Utils::getSystemDirectory() + "\\drivers\\netfilter2.sys";
 
     QString version = Utils::getSystemVersion();
@@ -65,4 +72,7 @@ bool NFSDK2Helper::uninstallDriver()
     QFile::remove(_driverPath);
 
     return true;
+#else
+    return false;
+#endif
 }

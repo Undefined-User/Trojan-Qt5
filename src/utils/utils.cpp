@@ -137,9 +137,9 @@ QList<WsHeader> Utils::convertQJsonObject(const QJsonObject &object)
     return wsHeaders;
 }
 
+#if defined (Q_OS_WIN)
 PROCESS_INFORMATION Utils::createProcessWithoutWindow(QString application, QString arg)
 {
-#if defined (Q_OS_WIN)
     QString path = application + " " + arg;
     LPTSTR ARG = (LPTSTR) path.utf16();
 
@@ -159,19 +159,24 @@ PROCESS_INFORMATION Utils::createProcessWithoutWindow(QString application, QStri
     }
 
     return piProcessInfo;
-#endif
 }
+#endif
 
 QString Utils::getSystemDirectory()
 {
+#if defined (Q_OS_WIN)
     char buffer[MAX_PATH];
     DWORD n = GetSystemDirectoryA(buffer, sizeof(buffer));
     std::string result(buffer, n);
     return QString::fromStdString(result);
+#else
+    return "";
+#endif
 }
 
 QString Utils::getSystemVersion()
 {
+#if defined (Q_OS_WIN)
     DWORD dwVersion = 0;
     DWORD dwMajorVersion = 0;
     DWORD dwMinorVersion = 0;
@@ -181,6 +186,9 @@ QString Utils::getSystemVersion()
     dwMinorVersion = (DWORD)(HIBYTE(LOWORD(dwVersion)));
 
     return QString("%1.%2").arg(dwMajorVersion).arg(dwMinorVersion);
+#else
+    return "";
+#endif
 }
 
 QString Utils::getFileVersion(QString fName)

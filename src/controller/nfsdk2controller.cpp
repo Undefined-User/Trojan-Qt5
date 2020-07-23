@@ -14,6 +14,7 @@ NFSDK2Controller::~NFSDK2Controller()
 
 void NFSDK2Controller::start()
 {
+#if defined (Q_OS_WIN)
     ConfigHelper *helper = Utils::getConfigHelper();
 
     QString _driverPath = Utils::getSystemDirectory() + "\\drivers\\netfilter2.sys";
@@ -47,9 +48,12 @@ void NFSDK2Controller::start()
     helper = nullptr;
 
     piProcessInfo = Utils::createProcessWithoutWindow(path, param);
+#endif
 }
 
 void NFSDK2Controller::stop()
 {
+#if defined (Q_OS_WIN)
     TerminateProcess(piProcessInfo.hProcess, 0);
+#endif
 }
