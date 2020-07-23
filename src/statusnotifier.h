@@ -97,7 +97,8 @@ private:
 
     QAction *serverSpeedPlot;
     QMenu *copyTerminalProxyCommandMenu;
-    QAction *terminalWinStyle;
+    QAction *terminalWinCmdStyle;
+    QAction *terminalWinPowerShellStyle;
     QAction *terminalUnixStyle;
     QAction *setProxyToTelegram;
     QAction *minimiseRestoreAction;

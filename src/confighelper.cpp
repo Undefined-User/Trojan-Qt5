@@ -1042,9 +1042,10 @@ void ConfigHelper::generateTrojanJson(TQProfile &profile)
     QJsonObject ssl;
     ssl["verify"] = true;
     ssl["verify_hostname"] = true;
-    ssl["cert"] = coreSettings.trojanCertPath;
-    ssl["cipher"] = coreSettings.trojanCipher;
-    ssl["cipher_tls13"] = coreSettings.trojanCipherTLS13;
+    if (!coreSettings.trojanCertPath.isEmpty())
+        ssl["cert"] = coreSettings.trojanCertPath;
+    if (!coreSettings.trojanCipher.isEmpty())
+        ssl["cipher"] = coreSettings.trojanCipher;
     ssl["sni"] = profile.sni;
     QJsonArray alpnArray;
     alpnArray.append("h2");

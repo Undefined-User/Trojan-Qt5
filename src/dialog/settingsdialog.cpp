@@ -89,7 +89,6 @@ SettingsDialog::SettingsDialog(ConfigHelper *ch, QWidget *parent) :
     ui->apiPortLineEdit->setText(QString::number(helper->getCoreSettings().apiPort));
     ui->certLineEdit->setText(helper->getCoreSettings().trojanCertPath);
     ui->cipherLineEdit->setText(helper->getCoreSettings().trojanCipher);
-    ui->cipherTLS13LineEdit->setText(helper->getCoreSettings().trojanCipherTLS13);
     ui->bufferSizeLineEdit->setText(QString::number(helper->getCoreSettings().bufferSize));
     ui->geoPathEdit->setText(helper->getCoreSettings().geoPath);
 
@@ -208,7 +207,6 @@ void SettingsDialog::onAccepted()
     coreSettings.apiPort = ui->apiPortLineEdit->text().toInt();
     coreSettings.trojanCertPath = ui->certLineEdit->text();
     coreSettings.trojanCipher = ui->cipherLineEdit->text();
-    coreSettings.trojanCipherTLS13 = ui->cipherTLS13LineEdit->text();
     coreSettings.geoPath = ui->geoPathEdit->text();
     coreSettings.bufferSize = ui->bufferSizeLineEdit->text().toInt();
 

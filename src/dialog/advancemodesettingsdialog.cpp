@@ -2,7 +2,7 @@
 #include "ui_advancemodesettingsdialog.h"
 #include "utils.h"
 #include "modehelper.h"
-#include "ui/modeeditdialog.h"
+#include "modeeditdialog.h"
 
 #include <QListView>
 #include <QDir>

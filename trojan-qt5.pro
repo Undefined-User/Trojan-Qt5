@@ -210,8 +210,8 @@ SOURCES += \
     src/dialog/settingsdialog.cpp \
     src/dialog/sharedialog.cpp \
     src/dialog/uriinputdialog.cpp \
-    src/nattypetestercontroller.cpp \
-    src/nfsdk2controller.cpp \
+    src/controller/nattypetestercontroller.cpp \
+    src/controller/nfsdk2controller.cpp \
     src/proxydialog/naiveproxyeditdialog.cpp \
     src/struct/configstruct.cpp \
     src/struct/trojangostruct.cpp \
@@ -221,6 +221,7 @@ SOURCES += \
     src/utils/nfsdk2helper.cpp \
     src/utils/ntphelper.cpp \
     src/utils/tuntaphelper.cpp \
+    src/utils/typehelper.cpp \
     src/validator/generalvalidator.cpp \
     src/validator/ip4validator.cpp \
     src/validator/portvalidator.cpp \
@@ -252,7 +253,6 @@ SOURCES += \
     src/utils/routetablehelper.cpp \
     src/utils/utils.cpp \
     src/connectionsortfilterproxymodel.cpp \
-    src/haproxythread.cpp \
     src/logger.cpp \
     src/utils/midman.cpp \
     src/pac/pacserver.cpp \
@@ -270,14 +270,14 @@ SOURCES += \
     src/subscribemanager.cpp \
     src/tqprofile.cpp \
     src/tqsubscribe.cpp \
-    src/tun2socksthread.cpp \
+    src/proxy/tun2socksthread.cpp \
     src/subscribedialog.cpp \
     src/httpproxy.cpp \
     src/socketstream.cpp \
     src/extension/clickablelabel.cpp \
     src/extension/qtcolorpicker.cpp \
     src/widget/trojangowidget.cpp \
-    ui/modeeditdialog.cpp
+    src/dialog/modeeditdialog.cpp
 
 HEADERS += \
     src/dialog/aboutdialog.h \
@@ -286,8 +286,8 @@ HEADERS += \
     src/dialog/settingsdialog.h \
     src/dialog/sharedialog.h \
     src/dialog/uriinputdialog.h \
-    src/nattypetestercontroller.h \
-    src/nfsdk2controller.h \
+    src/controller/nattypetestercontroller.h \
+    src/controller/fsdk2controller.h \
     src/proxydialog/naiveproxyeditdialog.h \
     src/systemproxy/mac.h \
     src/struct/configstruct.h \
@@ -298,6 +298,7 @@ HEADERS += \
     src/utils/nfsdk2helper.h \
     src/utils/ntphelper.h \
     src/utils/tuntaphelper.h \
+    src/utils/typehelper.h \
     src/validator/ip4validator.h \
     src/validator/portvalidator.h \
     src/validator/generalvalidator.h \
@@ -330,7 +331,6 @@ HEADERS += \
     src/proxydialog/trojaneditdialog.h \
     src/proxydialog/snelleditdialog.h \
     src/connectionsortfilterproxymodel.h \
-    src/haproxythread.h \
     src/logger.h \
     src/utils/midman.h \
     src/pac/pacserver.h \
@@ -348,14 +348,14 @@ HEADERS += \
     src/tqprofile.h \
     src/statusnotifier.h \
     src/tqsubscribe.h \
-    src/tun2socksthread.h \
+    src/proxy/tun2socksthread.h \
     src/subscribedialog.h \
     src/httpproxy.h \
     src/socketstream.h \
     src/extension/clickablelabel.h \
     src/extension/qtcolorpicker.h \
     src/widget/trojangowidget.h \
-    ui/modeeditdialog.h
+    src/dialog/modeeditdialog.h
 
 FORMS += \
     ui/advancemodesettingsdialog.ui \
@@ -401,6 +401,7 @@ headers.files = $${PROTOBUF_HEADERS}
 
 INCLUDEPATH += \
     $$PWD/src \
+    $$PWD/src/controller \
     $$PWD/src/dialog \
     $$PWD/src/proxy \
     $$PWD/src/proxyapi \
