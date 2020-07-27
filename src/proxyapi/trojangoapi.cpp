@@ -39,6 +39,9 @@ void TrojanGoAPI::run()
 
     QString address = QString("127.0.0.1:%1").arg(conf->getCoreSettings().apiPort);
 
+    delete conf;
+    conf = nullptr;
+
     while (running) {
 
         Channel = grpc::CreateChannel(address.toStdString(), grpc::InsecureChannelCredentials());

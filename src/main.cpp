@@ -124,6 +124,9 @@ int main(int argc, char *argv[])
     qRegisterMetaTypeStreamOperators<GraphSettings>("GraphSettings");
     qRegisterMetaTypeStreamOperators<RouterSettings>("RouterSettings");
     qRegisterMetaTypeStreamOperators<CoreSettings>("CoreSettings");
+    qRegisterMetaTypeStreamOperators<TUNTAPSettings>("TUNTAPSettings");
+    qRegisterMetaTypeStreamOperators<STUNSettings>("STUNSettings");
+    qRegisterMetaTypeStreamOperators<ModeSettings>("ModeSettings");
     qRegisterMetaTypeStreamOperators<TQProfile>("TQProfile");
     qRegisterMetaTypeStreamOperators<TQSubscribe>("TQSubscribe");
 
@@ -161,7 +164,10 @@ int main(int argc, char *argv[])
     ConfigHelper conf(configFile);
 
     // copy and install resources
-#if defined (Q_OS_MAC)
+#if defined (Q_OS_WIN)
+    ResourceHelper::copyNfsdk2();
+    ResourceHelper::copyNatTypeTester();
+#elif defined (Q_OS_MAC)
     if (!ResourceHelper::isSystemProxyHelperExist())
         ResourceHelper::installSystemProxyHelper();
 #endif
@@ -193,7 +199,7 @@ int main(int argc, char *argv[])
     MainWindow w(&conf);
     mainWindow = &w;
 
-    a.installEventFilter(new EventFilter(&w));
+    //a.installEventFilter(new EventFilter(&w));
 
     if (conf.getGeneralSettings().checkTimeOnStartup) {
         // check time accuracy

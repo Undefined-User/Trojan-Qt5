@@ -212,7 +212,7 @@ void UrlSchemeRegister::RegisterUrlScheme(const UrlSchemeDescriptor &descriptor)
 }
 
 void UrlSchemeRegister::RegisterAllUrlScheme() {
-    QStringList protocols = {"ss", "ssr", "vmess", "trojan", "snell", "trojan-qt5", "felix"};
+    QStringList protocols = {"ss", "ssd", "ssr", "vmess", "trojan", "snell", "trojan-qt5", "felix"};
     for (QString protocol : protocols) {
         UrlSchemeDescriptor descriptor;
         descriptor.protocol = protocol;
@@ -228,7 +228,7 @@ void UrlSchemeRegister::UnregisterUrlScheme(const UrlSchemeDescriptor &descripto
 }
 
 void UrlSchemeRegister::UnregisterAllUrlScheme() {
-    QStringList protocols = {"ss", "ssr", "vmess", "trojan", "snell", "trojan-qt5", "felix"};
+    QStringList protocols = {"ss", "ssd", "ssr", "vmess", "trojan", "snell", "trojan-qt5", "felix"};
     for (QString protocol : protocols) {
         UrlSchemeDescriptor descriptor;
         descriptor.protocol = protocol;

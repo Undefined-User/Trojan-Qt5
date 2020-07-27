@@ -16,13 +16,13 @@ QDataStream& operator >> (QDataStream &in, GeneralSettings &g)
 
 QDataStream& operator << (QDataStream &out, const InboundSettings &i)
 {
-    out << i.enableHttpMode << i.shareOverLan << i.enableIpv6Support << i.inboundSniffing << i.socks5LocalPort << i.httpLocalPort << i.pacLocalPort << i.haproxyStatusPort << i.haproxyPort;
+    out << i.enableHttpMode << i.shareOverLan << i.enableIpv6Support << i.inboundSniffing << i.socks5LocalPort << i.httpLocalPort << i.pacLocalPort << i.redirectorPort << i.haproxyStatusPort << i.haproxyPort;
     return out;
 }
 
 QDataStream& operator >> (QDataStream &in, InboundSettings &i)
 {
-    in >> i.enableHttpMode >> i.shareOverLan >> i.enableIpv6Support >> i.inboundSniffing >> i.socks5LocalPort >> i.httpLocalPort >> i.pacLocalPort >> i.haproxyStatusPort >> i.haproxyPort;
+    in >> i.enableHttpMode >> i.shareOverLan >> i.enableIpv6Support >> i.inboundSniffing >> i.socks5LocalPort >> i.httpLocalPort >> i.pacLocalPort >> i.redirectorPort >> i.haproxyStatusPort >> i.haproxyPort;
     return in;
 }
 
@@ -88,12 +88,48 @@ QDataStream& operator >> (QDataStream &in, RouterSettings &r)
 
 QDataStream& operator << (QDataStream &out, const CoreSettings &c)
 {
-    out << c.fingerprint << c.enableAPI << c.enableRouter << c.countOutboundTraffic << c.geoPath << c.apiPort << c.trojanCertPath << c.trojanCipher << c.trojanCipherTLS13 << c.bufferSize;
+    out << c.fingerprint << c.enableAPI << c.enableRouter << c.countOutboundTraffic << c.geoPath << c.apiPort << c.trojanCertPath << c.trojanCipher << c.bufferSize;
     return out;
 }
 
 QDataStream& operator >> (QDataStream &in, CoreSettings &c)
 {
-    in >> c.fingerprint >> c.enableAPI >> c.enableRouter >> c.countOutboundTraffic >> c.geoPath >> c.apiPort >> c.trojanCertPath >> c.trojanCipher >> c.trojanCipherTLS13 >> c.bufferSize;
+    in >> c.fingerprint >> c.enableAPI >> c.enableRouter >> c.countOutboundTraffic >> c.geoPath >> c.apiPort >> c.trojanCertPath >> c.trojanCipher >> c.bufferSize;
+    return in;
+}
+
+QDataStream& operator << (QDataStream &out, const TUNTAPSettings &t)
+{
+    out << t.address << t.netmask << t.gateway << t.dns << t.customDNS << t.fakeDNS << t.bypassIPs;
+    return out;
+}
+
+QDataStream& operator >> (QDataStream &in, TUNTAPSettings &t)
+{
+    in >> t.address >> t.netmask >> t.gateway >> t.dns >> t.customDNS >> t.fakeDNS >> t.bypassIPs;
+    return in;
+}
+
+QDataStream& operator << (QDataStream &out, const STUNSettings &s)
+{
+    out << s.address << s.port;
+    return out;
+}
+
+QDataStream& operator >> (QDataStream &in, STUNSettings &s)
+{
+    in >> s.address >> s.port;
+    return in;
+}
+
+QDataStream& operator << (QDataStream &out, const ModeSettings &m)
+{
+    out << m.mode << m.redirectorMode;
+    return out;
+}
+
+QDataStream& operator >> (QDataStream &in, ModeSettings &m)
+{
+    in >> m.mode >> m.redirectorMode;
     return in;
 }

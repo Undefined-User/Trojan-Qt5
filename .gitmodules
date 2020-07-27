@@ -19,3 +19,6 @@
 [submodule "src/qntp"]
 	path = src/qntp
 	url = https://github.com/retgone/qntp.git
+[submodule "resources/mode"]
+	path = resources/mode
+	url = https://github.com/Trojan-Qt5/Trojan-Qt5-Mode.git

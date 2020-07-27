@@ -69,16 +69,15 @@ void SubscribeManager::updateAllSubscribes()
             if (GeneralValidator::validateAll(list[x])) {
                 TQProfile profile = TQProfile(list[x]);
                 if (!isFiltered(profile.name) && (x < helper->getSubscribeSettings().maximumSubscribe || helper->getSubscribeSettings().maximumSubscribe == 0)) {
-                    if (helper->getSubscribeSettings().overwriteAllowInsecure) {
-                        profile.verifyCertificate = false;
+                    if (helper->getSubscribeSettings().overwriteAllowInsecure)
                         profile.vmessSettings.tls.allowInsecure = true;
-                     }
-                    if (helper->getSubscribeSettings().overwriteAllowInsecureCiphers) {
+
+                    if (helper->getSubscribeSettings().overwriteAllowInsecureCiphers)
                         profile.vmessSettings.tls.allowInsecureCiphers = true;
-                    }
-                    if (helper->getSubscribeSettings().overwriteTcpFastOpen) {
+
+                    if (helper->getSubscribeSettings().overwriteTcpFastOpen)
                         profile.tcpFastOpen = true;
-                    }
+
                     emit addUri(profile);
                 }
             }

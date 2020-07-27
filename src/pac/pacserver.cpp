@@ -27,6 +27,9 @@ void PACServer::listen()
     bool status = server.listen(QHostAddress(addr), conf->getInboundSettings().pacLocalPort);
     if (!status)
         Logger::warning(QString("[PAC Server] failed to listen on %1:%2, PAC will not be functional").arg(addr).arg(conf->getInboundSettings().pacLocalPort));
+
+    delete conf;
+    conf = nullptr;
 }
 
 QString PACServer::loadPACFile()

@@ -134,13 +134,18 @@ void Connection::start()
     }
 
     if (conf->getInboundSettings().enableHttpMode)
-        http = new HttpProxy();
+        http = std::make_unique<HttpProxy>();
 
     if (conf->getSystemProxySettings() == "advance") {
         //initialize tun2socks and route table helper
-        tun2socks = new Tun2socksThread();
-        QString serverAddress = profile.serverAddress;
-        rhelper = new RouteTableHelper(serverAddress);
+        if (conf->getModeSettings().mode == 0) {
+            tun2socks = std::make_unique<Tun2socksThread>();
+            QString serverAddress = profile.serverAddress;
+            rhelper = std::make_unique<RouteTableHelper>(serverAddress);
+        } else if (conf->getModeSettings().mode == 1)
+            nfsdk2 = std::make_unique<NFSDK2Controller>();
+            nat = std::make_unique<NatTypeTesterController>();
+            connect(nat.get(), &NatTypeTesterController::natTypeFinished, this, &Connection::natTypeFinished);
     }
 
     QString file = Utils::getConfigPath() + "/config.json";
@@ -155,7 +160,7 @@ void Connection::start()
             emit startFailed();
             return;
         }
-        v2ray = new V2rayThread(file);
+        v2ray = std::make_unique<V2rayThread>(file);
     } else if (profile.type == "http") {
         conf->generateSocks5HttpJson("http", profile);
         testV2rayGo_return v2rayStatus = testV2rayGo(file.toStdString().data());
@@ -164,12 +169,12 @@ void Connection::start()
             emit startFailed();
             return;
         }
-        v2ray = new V2rayThread(file);
+        v2ray = std::make_unique<V2rayThread>(file);
     } else if (profile.type == "ss") {
         QString apiAddr = localAddr + ":" + QString::number(conf->getCoreSettings().apiPort);
         QString clientAddr = localAddr + ":" + QString::number(conf->getInboundSettings().socks5LocalPort);
         QString serverAddr = profile.serverAddress + ":" + QString::number(profile.serverPort);
-        ss = new SSThread(clientAddr.toUtf8().data(),
+        ss = std::make_unique<SSThread>(clientAddr.toUtf8().data(),
                           serverAddr.toUtf8().data(),
                           profile.method.toUtf8().data(),
                           profile.password.toUtf8().data(),
@@ -202,13 +207,13 @@ void Connection::start()
             emit startFailed();
             return;
         }
-        v2ray = new V2rayThread(file);
+        v2ray = std::make_unique<V2rayThread>(file);
     } else if (profile.type == "trojan") {
         conf->generateTrojanJson(profile);
-        trojan = new TrojanThread(file);
+        trojan = std::make_unique<TrojanThread>(file);
     } else if (profile.type == "snell") {
         conf->generateSnellJson(profile);
-        snell = new SnellThread(file);
+        snell = std::make_unique<SnellThread>(file);
     }
 
     //set the file permission as well
@@ -220,33 +225,33 @@ void Connection::start()
     if (profile.type == "ss") {
         ss->start();
         if (conf->getCoreSettings().enableAPI) {
-            ssGoAPI = new SSGoAPI();
+            ssGoAPI = std::make_unique<SSGoAPI>();
             ssGoAPI->start();
-            connect(ssGoAPI, &SSGoAPI::OnDataReady, this, &Connection::onNewBytesTransmitted);
+            connect(ssGoAPI.get(), &SSGoAPI::OnDataReady, this, &Connection::onNewBytesTransmitted);
         }
     } else if (profile.type == "ssr") {
         ssr->start();
     } else if ((profile.type == "socks5" || profile.type == "http" ) || profile.type == "vmess") {
         v2ray->start();
         if (conf->getCoreSettings().enableAPI) {
-            v2rayAPI = new V2rayAPI();
+            v2rayAPI = std::make_unique<V2rayAPI>();
             v2rayAPI->start();
-            connect(v2rayAPI, &V2rayAPI::OnDataReady, this, &Connection::onNewV2RayBytesTransmitted);
+            connect(v2rayAPI.get(), &V2rayAPI::OnDataReady, this, &Connection::onNewV2RayBytesTransmitted);
         }
     } else if (profile.type == "trojan") {
         trojan->start();
         if (conf->getCoreSettings().enableAPI) {
-            trojanGoAPI = new TrojanGoAPI();
+            trojanGoAPI = std::make_unique<TrojanGoAPI>();
             trojanGoAPI->setPassword(profile.password);
             trojanGoAPI->start();
-            connect(trojanGoAPI, &TrojanGoAPI::OnDataReady, this, &Connection::onNewBytesTransmitted);
+            connect(trojanGoAPI.get(), &TrojanGoAPI::OnDataReady, this, &Connection::onNewBytesTransmitted);
         }
     } else if (profile.type == "snell") {
         snell->start();
         if (conf->getCoreSettings().enableAPI) {
-            snellGoAPI = new SnellGoAPI();
+            snellGoAPI = std::make_unique<SnellGoAPI>();
             snellGoAPI->start();
-            connect(snellGoAPI, &SnellGoAPI::OnDataReady, this, &Connection::onNewBytesTransmitted);
+            connect(snellGoAPI.get(), &SnellGoAPI::OnDataReady, this, &Connection::onNewBytesTransmitted);
         }
     }
 
@@ -264,9 +269,15 @@ void Connection::start()
     //start tun2socks if settings is configured to do so
     if (conf->getSystemProxySettings() == "advance") {
         if (PrivilegesHelper::checkPrivileges()) {
-            tun2socks->start();
-            rhelper->set();
-           }
+            if (conf->getModeSettings().mode == 0) {
+                tun2socks->start();
+                rhelper->set();
+                nat->startTesting();
+            } else if (conf->getModeSettings().mode == 1) {
+                nfsdk2->start();
+                nat->startTesting();
+            }
+        }
         else {
             PrivilegesHelper::showWarning();
             onStartFailed();
@@ -287,6 +298,9 @@ void Connection::start()
         SystemProxyHelper::setSystemProxy(2);
     else if (conf->getSystemProxySettings() == "global")
         SystemProxyHelper::setSystemProxy(1);
+
+    delete conf;
+    conf = nullptr;
 }
 
 void Connection::stop()
@@ -330,14 +344,23 @@ void Connection::stop()
 
         emit stateChanged(running);
 
-        if (tun2socks && conf->getSystemProxySettings() == "advance") {
-            rhelper->reset();
-            tun2socks->stop();
-        } else if (conf->getSystemProxySettings() != "direct") {
+        if (conf->getSystemProxySettings() == "advance") {
+            if (tun2socks && conf->getModeSettings().mode == 0) {
+                tun2socks->stop();
+                if (rhelper)
+                    rhelper->reset();
+            } else if (nfsdk2 && conf->getModeSettings().mode == 1)
+                nfsdk2->stop();
+        }
+
+        if (conf->getSystemProxySettings() != "direct" && conf->getSystemProxySettings() != "advance") {
             //set proxy settings after emit the signal
             SystemProxyHelper::setSystemProxy(0);
         }
     }
+
+    delete conf;
+    conf = nullptr;
 }
 
 void Connection::onStartFailed()
@@ -384,6 +407,9 @@ void Connection::onStartFailed()
     if (conf->getSystemProxySettings() != "direct" && conf->getSystemProxySettings() != "advance") {
         SystemProxyHelper::setSystemProxy(0);
     }
+
+    delete conf;
+    conf = nullptr;
 }
 
 void Connection::onNotifyConnectionChanged()

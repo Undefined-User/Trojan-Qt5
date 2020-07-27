@@ -38,7 +38,6 @@ TQProfile::TQProfile()
     security = QString("auto");
     testsEnabled = QString("none");
     // trojan only
-    verifyCertificate = true;
     reuseSession = true;
     sessionTicket = false;
     sni = "";
@@ -72,7 +71,6 @@ bool TQProfile::equals(const TQProfile &profile) const
          && serverPort == profile.serverPort
          && group == profile.group
          && name == profile.name
-         && verifyCertificate == profile.verifyCertificate
          && reuseSession == profile.reuseSession
          && tcpFastOpen == profile.tcpFastOpen);
 }
@@ -341,7 +339,9 @@ TQProfile TQProfile::fromVmessUri(const std::string& vmessUri) const
     result.alterID = vmess["aid"].toString().toInt();
 
     VmessSettings vmessSettings = result.vmessSettings;
-    vmessSettings.network = vmess["net"].toString();
+    vmessSettings.network = vmess["net"].toString().isEmpty() ? "tcp" : vmess["net"].toString();
+    if (vmessSettings.network == "h2")
+        vmessSettings.network = "http";
 
     if (vmessSettings.network == "tcp") {
         vmessSettings.tcp.type = vmess["type"].toString();
@@ -418,9 +418,6 @@ TQProfile TQProfile::fromTrojanUri(const std::string& trojanUri) const
 
     QUrl url(QString::fromStdString(trojanUri));
     QUrlQuery query(url.query());
-    result.verifyCertificate = !query.queryItemValue("allowinsecure").toInt();
-    if (query.queryItemValue("allowinsecure").isEmpty())
-         result.verifyCertificate = !query.queryItemValue("allowInsecure").toInt();
     result.sni = query.queryItemValue("sni");
     if (result.sni.isEmpty())
         result.sni = query.queryItemValue("peer");
@@ -581,7 +578,7 @@ QString TQProfile::toVmessUri() const
  */
 QString TQProfile::toTrojanUri() const
 {
-    QString trojanUri = password.toUtf8().toPercentEncoding() + "@" + serverAddress + ":" + QString::number(serverPort) + "?allowinsecure=" + QString::number(int(!verifyCertificate)) + "&sni=" + sni;
+    QString trojanUri = password.toUtf8().toPercentEncoding() + "@" + serverAddress + ":" + QString::number(serverPort) + "?allowinsecure=0" + "&sni=" + sni;
     trojanUri += "&mux=" + QString::number(int(trojanGoSettings.mux.enable)) + "&ws=" + QString::number(int(trojanGoSettings.websocket.enable)) + "&wspath=" + trojanGoSettings.websocket.path + "&wshost=" + trojanGoSettings.websocket.host + "&ss=" + QString::number(int(trojanGoSettings.shadowsocks.enable)) + "&ssmethod=" + trojanGoSettings.shadowsocks.method + "&sspasswd=" + trojanGoSettings.shadowsocks.password;
     trojanUri += "&group=" + group.toUtf8().toPercentEncoding();
     QByteArray uri = QByteArray(trojanUri.toUtf8());
@@ -607,12 +604,12 @@ QString TQProfile::toSnellUri() const
 
 QDataStream& operator << (QDataStream &out, const TQProfile &p)
 {
-    out << p.type << p.group << p.autoStart << p.serverPort << p.name << p.serverAddress << p.verifyCertificate << p.password << p.sni << p.tcpFastOpen << p.reuseSession << p.sessionTicket << p.method << p.protocol << p.protocolParam << p.obfs << p.obfsParam << p.plugin << p.pluginParam << p.uuid << p.alterID << p.security << p.testsEnabled << p.vmessSettings << p.trojanGoSettings << p.latency << p.currentDownloadUsage << p.currentUploadUsage << p.totalDownloadUsage << p.totalUploadUsage << p.lastTime << p.nextResetDate;
+    out << p.type << p.group << p.autoStart << p.serverPort << p.name << p.serverAddress << p.password << p.sni << p.tcpFastOpen << p.reuseSession << p.sessionTicket << p.method << p.protocol << p.protocolParam << p.obfs << p.obfsParam << p.plugin << p.pluginParam << p.uuid << p.alterID << p.security << p.testsEnabled << p.vmessSettings << p.trojanGoSettings << p.latency << p.currentDownloadUsage << p.currentUploadUsage << p.totalDownloadUsage << p.totalUploadUsage << p.lastTime << p.nextResetDate;
     return out;
 }
 
 QDataStream& operator >> (QDataStream &in, TQProfile &p)
 {
-    in >> p.type >> p.group >> p.autoStart >> p.serverPort >> p.name >> p.serverAddress >> p.verifyCertificate >> p.password >> p.sni >> p.tcpFastOpen >> p.reuseSession >> p.sessionTicket >> p.method >> p.protocol >> p.protocolParam >> p.obfs >> p.obfsParam >> p.plugin >> p.pluginParam >> p.uuid >> p.alterID >> p.security >> p.testsEnabled >> p.vmessSettings >> p.trojanGoSettings >> p.latency >> p.currentDownloadUsage >> p.currentUploadUsage >> p.totalDownloadUsage >> p.totalUploadUsage >> p.lastTime >> p.nextResetDate;
+    in >> p.type >> p.group >> p.autoStart >> p.serverPort >> p.name >> p.serverAddress >> p.password >> p.sni >> p.tcpFastOpen >> p.reuseSession >> p.sessionTicket >> p.method >> p.protocol >> p.protocolParam >> p.obfs >> p.obfsParam >> p.plugin >> p.pluginParam >> p.uuid >> p.alterID >> p.security >> p.testsEnabled >> p.vmessSettings >> p.trojanGoSettings >> p.latency >> p.currentDownloadUsage >> p.currentUploadUsage >> p.totalDownloadUsage >> p.totalUploadUsage >> p.lastTime >> p.nextResetDate;
     return in;
 }

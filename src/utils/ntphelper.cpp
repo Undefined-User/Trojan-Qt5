@@ -10,9 +10,13 @@ void NTPHelper::checkTime()
 {
     m_client = new NtpClient(this);
     connect(m_client, SIGNAL(replyReceived(QHostAddress,quint16,NtpReply)), this, SLOT(onReplyReceived(QHostAddress,quint16,NtpReply)));
-    QHostAddress address = QHostInfo::fromName("pool.ntp.org").addresses().first();
-    Logger::debug(QString("[NTP] Sending ntp request to %1").arg(address.toString()));
-    m_client->sendRequest(address, 123);
+    QList<QHostAddress> address = QHostInfo::fromName("pool.ntp.org").addresses();
+    if (!address.isEmpty()) {
+        Logger::debug(QString("[NTP] Sending ntp request to %1").arg(address.first().toString()));
+        m_client->sendRequest(address.first(), 123);
+    } else {
+        Logger::error("[NTP] Failed to resolve host pool.ntp.org");
+    }
 }
 
 void NTPHelper::onReplyReceived(QHostAddress host, quint16 port, NtpReply reply)

@@ -16,6 +16,7 @@ public:
 
 public slots:
     void refresh(QString localAddr, QList<int> ports, QList<QString> stats);
+    void refreshNatType(QString natType);
 
 private:
     void updatePortStatus(QString localAddr, int socks5Port, int httpPort, int pacPort);
@@ -26,6 +27,7 @@ private:
     QLabel *m_SOCKS5Lbl;
     QLabel *m_HTTPLbl;
     QLabel *m_PACLbl;
+    QLabel *m_NATLbl;
 };
 
 #endif // STATUSBAR_H

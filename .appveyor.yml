@@ -23,7 +23,7 @@ install:
   - set GOARCH=386
   - go env -w GOPROXY=direct
   - go env -w GOSUMDB=off
-  - go build --tags "api client router" -buildmode=c-shared -o trojan-qt5-core.dll main.go
+  - go build --tags "api client router" -buildmode=c-shared -o Trojan-Qt5-Core.dll main.go
   - process.bat
   - python msvc.py
   - cd ../..

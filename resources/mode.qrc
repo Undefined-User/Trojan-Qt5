@@ -1,0 +1,98 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mode/A Hat in Time.json</file>
+        <file>mode/Adobe Creative Cloud (No Apps).json</file>
+        <file>mode/AMD Radeon.json</file>
+        <file>mode/Apex Legends (with Origin).json</file>
+        <file>mode/Arma3.json</file>
+        <file>mode/Battlefield 1.json</file>
+        <file>mode/Battlefield 3.json</file>
+        <file>mode/Battlefield 4.json</file>
+        <file>mode/Battlefield V.json</file>
+        <file>mode/Battlenet.json</file>
+        <file>mode/Blockstorm.json</file>
+        <file>mode/Call of Duty ModernWarfare.json</file>
+        <file>mode/Closers (Korea) (with NGM).json</file>
+        <file>mode/Counter-Strike - Global Offensive.json</file>
+        <file>mode/Cube 2 Sauerbraten.json</file>
+        <file>mode/CyberDuck.json</file>
+        <file>mode/Destiny 2 .json</file>
+        <file>mode/Dino D-Day.json</file>
+        <file>mode/Discord.json</file>
+        <file>mode/DOOM Eternal.json</file>
+        <file>mode/DOOM.json</file>
+        <file>mode/Escape From Tarkov.json</file>
+        <file>mode/Etterna.json</file>
+        <file>mode/EVE Online.json</file>
+        <file>mode/Faceit AC.json</file>
+        <file>mode/Factorio.json</file>
+        <file>mode/FINAL FANTASY XIV Online.json</file>
+        <file>mode/For The King.json</file>
+        <file>mode/Fortnite.json</file>
+        <file>mode/ForzaHorizon 4.json</file>
+        <file>mode/Geforce Experience.json</file>
+        <file>mode/Git.json</file>
+        <file>mode/Grand Theft Auto V.json</file>
+        <file>mode/GTFO.json</file>
+        <file>mode/Hitman 2.json</file>
+        <file>mode/Insurgency Sandstorm.json</file>
+        <file>mode/JetBrains ToolBox.json</file>
+        <file>mode/KartRider (Korea) (with NGM).json</file>
+        <file>mode/KartRider Drift.json</file>
+        <file>mode/Killing Floor 2.json</file>
+        <file>mode/League of Legends (Japan) (with Riot Games).json</file>
+        <file>mode/League of Legends (Taiwan) (with Garena).json</file>
+        <file>mode/League of Legends (US).json</file>
+        <file>mode/Left 4 Dead 2.json</file>
+        <file>mode/Mabinogi (Global) (Without NGM).json</file>
+        <file>mode/Mabinogi (Korea) (With NGM).json</file>
+        <file>mode/Minecraft (Java).json</file>
+        <file>mode/Minecraft Bedrock (Win10 UWP).json</file>
+        <file>mode/Move or Die.json</file>
+        <file>mode/NatTypeTester.json</file>
+        <file>mode/Natural Selection 2.json</file>
+        <file>mode/Nine Parchments.json</file>
+        <file>mode/NodeJS With NVM.json</file>
+        <file>mode/Origin.json</file>
+        <file>mode/OSU.json</file>
+        <file>mode/overcooked! 2.json</file>
+        <file>mode/PlayerUnknown's Battlegrounds - Test Server.json</file>
+        <file>mode/PlayerUnknown's Battlegrounds Lite.json</file>
+        <file>mode/PlayerUnknown's Battlegrounds.json</file>
+        <file>mode/PowerShell.json</file>
+        <file>mode/qBittorrent.json</file>
+        <file>mode/Quake Champions.json</file>
+        <file>mode/Quake Live.json</file>
+        <file>mode/RayCity (Thailand) (Dark RayCity).json</file>
+        <file>mode/RayCity (Thailand) (Rebirth RayCity).json</file>
+        <file>mode/Rising Storm 2 Vietnam.json</file>
+        <file>mode/Rockstar Games Launcher.json</file>
+        <file>mode/SoulWorker (Steam).json</file>
+        <file>mode/Sourcetree.json</file>
+        <file>mode/Squad.json</file>
+        <file>mode/Steam.json</file>
+        <file>mode/Steep.json</file>
+        <file>mode/Stick Fight The Game.json</file>
+        <file>mode/Tannenberg.json</file>
+        <file>mode/Tom Clancy's Rainbow Six Siege (with Uplay).json</file>
+        <file>mode/Tom Clancy's Rainbow Six Siege (without Uplay).json</file>
+        <file>mode/Tom Clancy's The Division 2 (with Uplay).json</file>
+        <file>mode/Tom Clancy's The Division 2 (without Uplay).json</file>
+        <file>mode/Tree Of Savior (Taiwan) (with OmgPortal).json</file>
+        <file>mode/Ultimate Chicken Horse.json</file>
+        <file>mode/Unity Asset Store for Unity.json</file>
+        <file>mode/Unity Hub.json</file>
+        <file>mode/UNO (with Uplay).json</file>
+        <file>mode/UNO (without Uplay).json</file>
+        <file>mode/Uplay.json</file>
+        <file>mode/Valorant.json</file>
+        <file>mode/Verdun.json</file>
+        <file>mode/Visual Studio Code.json</file>
+        <file>mode/Warframe.json</file>
+        <file>mode/Warthunder.json</file>
+        <file>mode/Watch_Dogs 2 (with Uplay).json</file>
+        <file>mode/Watch_Dogs 2 (without Uplay).json</file>
+        <file>mode/Xftp 6.json</file>
+        <file>mode/Xshell 6.json</file>
+    </qresource>
+</RCC>

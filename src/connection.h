@@ -23,11 +23,14 @@
 #include <QHostInfo>
 #include <QHostAddress>
 #include <memory>
+
 #include "httpproxy.h"
 #include "pachelper.h"
 #include "ssthread.h"
 #include "SSRThread.hpp"
 #include "tun2socksthread.h"
+#include "nfsdk2controller.h"
+#include "nattypetestercontroller.h"
 #include "v2raythread.h"
 #include "trojanthread.h"
 #include "snellthread.h"
@@ -66,6 +69,7 @@ signals:
     void newLogAvailable(const QString &);
     void dataUsageChanged(const quint64 &current, const quint64 &total);
     void dataTrafficAvailable(const QList<quint64> data);
+    void natTypeFinished(const QString &);
     void startFailed();
     void connectionChanged();
     void connectionSwitched();
@@ -78,18 +82,22 @@ public slots:
     void onNotifyConnectionChanged();
 
 private:
-    HttpProxy *http;
-    SSThread *ss;
+    std::unique_ptr<HttpProxy> http;
+    std::unique_ptr<SSThread> ss;
     std::unique_ptr<SSRThread> ssr;
-    Tun2socksThread *tun2socks;
-    V2rayThread *v2ray;
-    TrojanThread *trojan;
-    SnellThread *snell;
-    RouteTableHelper *rhelper;
-    SSGoAPI *ssGoAPI;
-    V2rayAPI *v2rayAPI;
-    TrojanGoAPI *trojanGoAPI;
-    SnellGoAPI *snellGoAPI;
+    std::unique_ptr<V2rayThread> v2ray;
+    std::unique_ptr<TrojanThread> trojan;
+    std::unique_ptr<SnellThread> snell;
+
+    std::unique_ptr<RouteTableHelper> rhelper;
+    std::unique_ptr<Tun2socksThread> tun2socks;
+    std::unique_ptr<NFSDK2Controller> nfsdk2;
+    std::unique_ptr<NatTypeTesterController> nat;
+
+    std::unique_ptr<SSGoAPI> ssGoAPI;
+    std::unique_ptr<V2rayAPI> v2rayAPI;
+    std::unique_ptr<TrojanGoAPI> trojanGoAPI;
+    std::unique_ptr<SnellGoAPI> snellGoAPI;
 
     TQProfile profile;
     bool running;

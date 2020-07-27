@@ -15,6 +15,7 @@
 #include "userrulesdialog.h"
 #include "sharedialog.h"
 #include "settingsdialog.h"
+#include "advancemodesettingsdialog.h"
 #include "qrcodecapturer.h"
 #include "generalvalidator.h"
 #include "midman.h"
@@ -194,6 +195,8 @@ MainWindow::MainWindow(ConfigHelper *confHelper, QWidget *parent) :
             this, &MainWindow::onMoveDown);
     connect(ui->actionGeneralSettings, &QAction::triggered,
             this, &MainWindow::onGeneralSettings);
+    connect(ui->actionAdvanceModeSettings, &QAction::triggered,
+            this, &MainWindow::onAdvanceModeSettings);
     connect(ui->actionUserRuleSerttings, &QAction::triggered,
             this, &MainWindow::onUserRuleSettings);
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::onAbout);
@@ -293,6 +296,7 @@ void MainWindow::onToggleConnection(bool status)
             //configHelper->isEnableServerLoadBalance() ? configHelper->generateHaproxyConf(*model) : void();
             con->start();
             connect(con, &Connection::dataTrafficAvailable, this, &MainWindow::onStatusAvailable);
+            connect(con, &Connection::natTypeFinished, this, &MainWindow::onNatTypeFinished);
         }
     }
 }
@@ -572,6 +576,7 @@ void MainWindow::onConnect()
         //configHelper->isEnableServerLoadBalance() ? configHelper->generateHaproxyConf(*model) : void();
         con->start();
         connect(con, &Connection::dataTrafficAvailable, this, &MainWindow::onStatusAvailable);
+        connect(con, &Connection::natTypeFinished, this, &MainWindow::onNatTypeFinished);
     } else {
         QMessageBox::critical(this, tr("Invalid"),
                               tr("The connection's profile is invalid!"));
@@ -588,6 +593,7 @@ void MainWindow::onForceConnect()
         //configHelper->isEnableServerLoadBalance() ? configHelper->generateHaproxyConf(*model) : void();
         con->start();
         connect(con, &Connection::dataTrafficAvailable, this, &MainWindow::onStatusAvailable);
+        connect(con, &Connection::natTypeFinished, this, &MainWindow::onNatTypeFinished);
     } else {
         QMessageBox::critical(this, tr("Invalid"),
                               tr("The connection's profile is invalid!"));
@@ -679,6 +685,17 @@ void MainWindow::onGeneralSettings()
     connect(sDlg, &SettingsDialog::finished,
             sDlg, &SettingsDialog::deleteLater);
     if (sDlg->exec()) {
+        configHelper->save(*model);
+        configHelper->setStartAtLogin();
+    }
+}
+
+void MainWindow::onAdvanceModeSettings()
+{
+    AdvanceModeSettingsDialog *aDlg = new AdvanceModeSettingsDialog(configHelper, this);
+    connect(aDlg, &AdvanceModeSettingsDialog::finished,
+            aDlg, &AdvanceModeSettingsDialog::deleteLater);
+    if (aDlg->exec()) {
         configHelper->save(*model);
         configHelper->setStartAtLogin();
     }
@@ -897,6 +914,11 @@ void MainWindow::onStatusAvailable(QList<quint64> data)
     stats);
 }
 
+void MainWindow::onNatTypeFinished(QString natType)
+{
+    m_statusBar->refreshNatType(natType);
+}
+
 void MainWindow::setupActionIcon()
 {
     ui->actionConnect->setIcon(QIcon(":/icons/icons/network-connect.svg"));
@@ -943,6 +965,8 @@ void MainWindow::setupActionIcon()
                               QIcon::fromTheme("insert-image")));
     ui->actionScanQRCodeCapturer->setIcon(ui->actionQRCode->icon());
     ui->actionGeneralSettings->setIcon(QIcon::fromTheme("configure",
+                                       QIcon::fromTheme("preferences-desktop")));
+    ui->actionAdvanceModeSettings->setIcon(QIcon::fromTheme("configure",
                                        QIcon::fromTheme("preferences-desktop")));
     ui->actionUserRuleSerttings->setIcon(QIcon::fromTheme("configure",
                                          QIcon::fromTheme("preferences-desktop")));

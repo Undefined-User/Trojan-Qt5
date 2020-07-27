@@ -459,24 +459,24 @@
          <item row="6" column="1">
           <widget class="QLineEdit" name="pacPortLineEdit"/>
          </item>
-         <item row="7" column="0">
+         <item row="8" column="0">
           <widget class="QLabel" name="label_18">
            <property name="text">
             <string>Haproxy Port</string>
            </property>
           </widget>
          </item>
-         <item row="7" column="1">
+         <item row="8" column="1">
           <widget class="QLineEdit" name="haproxyPortLineEdit"/>
          </item>
-         <item row="8" column="0">
+         <item row="9" column="0">
           <widget class="QLabel" name="label_19">
            <property name="text">
             <string>Haproxy Status Port</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="1">
+         <item row="9" column="1">
           <widget class="QLineEdit" name="haproxyStatusPortLineEdit"/>
          </item>
          <item row="3" column="0">
@@ -492,6 +492,16 @@
             <string>Enable</string>
            </property>
           </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_44">
+           <property name="text">
+            <string>Redirector Port</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="redirectorPortLineEdit"/>
          </item>
         </layout>
        </item>
@@ -973,11 +983,6 @@
            </item>
            <item>
             <property name="text">
-             <string>auto</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
              <string>firefox</string>
             </property>
            </item>
@@ -989,11 +994,6 @@
            <item>
             <property name="text">
              <string>ios</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>randomized</string>
             </property>
            </item>
           </widget>
@@ -1081,23 +1081,13 @@
           <widget class="QLineEdit" name="cipherLineEdit"/>
          </item>
          <item row="8" column="0">
-          <widget class="QLabel" name="cipherTLS13Label">
-           <property name="text">
-            <string>Cipher TLS13</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1">
-          <widget class="QLineEdit" name="cipherTLS13LineEdit"/>
-         </item>
-         <item row="9" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Buffer Size</string>
            </property>
           </widget>
          </item>
-         <item row="9" column="1">
+         <item row="8" column="1">
           <widget class="QLineEdit" name="bufferSizeLineEdit"/>
          </item>
         </layout>

@@ -69,30 +69,6 @@
           <item row="2" column="1">
            <widget class="QLineEdit" name="serverPortEdit"/>
           </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Reset Data Usage After</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QDateEdit" name="resetDateEdit"/>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Automation</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QCheckBox" name="autoStartCheckBox">
-            <property name="text">
-             <string>Auto connect on application start</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
@@ -101,7 +77,11 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QLineEdit" name="pwdEdit"/>
+           <widget class="QLineEdit" name="pwdEdit">
+            <property name="echoMode">
+             <enum>QLineEdit::Password</enum>
+            </property>
+           </widget>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_5">
@@ -114,27 +94,20 @@
            <widget class="QLineEdit" name="sniEdit"/>
           </item>
           <item row="5" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Verify Certificate</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QCheckBox" name="verifyCertificateCheckBox">
-            <property name="text">
-             <string>Enable</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
            <widget class="QLabel" name="label_7">
             <property name="text">
              <string>Reuse Session</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
+          <item row="5" column="1">
+           <widget class="QCheckBox" name="reuseSessionCheckBox">
+            <property name="text">
+             <string>Enable</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
            <widget class="QLabel" name="label_10">
             <property name="text">
              <string>Session Ticket</string>
@@ -142,16 +115,33 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QCheckBox" name="reuseSessionCheckBox">
+           <widget class="QCheckBox" name="sessionTicketCheckBox">
             <property name="text">
              <string>Enable</string>
             </property>
            </widget>
           </item>
-          <item row="7" column="1">
-           <widget class="QCheckBox" name="sessionTicketCheckBox">
+          <item row="7" column="0">
+           <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>Enable</string>
+             <string>Reset Data Usage After</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QDateEdit" name="resetDateEdit"/>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Automation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QCheckBox" name="autoStartCheckBox">
+            <property name="text">
+             <string>Auto connect on application start</string>
             </property>
            </widget>
           </item>

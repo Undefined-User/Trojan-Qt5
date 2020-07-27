@@ -41,6 +41,9 @@ StatusBar::StatusBar(QWidget *parent)
     m_PACLbl = new QLabel(tr("PAC   %1: %2").arg("127.0.0.1").arg("0"), this);
     m_PACLbl->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
+    m_NATLbl = new QLabel(tr("NAT     %1").arg("NotTested"));
+    m_NATLbl->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+
     // Because on some platforms the default icon size is bigger
     // and it will result in taller/fatter statusbar, even if the
     // icons are actually 16x16
@@ -50,36 +53,33 @@ StatusBar::StatusBar(QWidget *parent)
     QFrame *statusSep1 = new QFrame(this);
     statusSep1->setObjectName("statusFrame");
     statusSep1->setFrameStyle(QFrame::VLine);
-#ifndef Q_OS_MACOS
-    statusSep1->setFrameShadow(QFrame::Raised);
-#endif
+
     QFrame *statusSep2 = new QFrame(this);
     statusSep2->setObjectName("statusFrame");
     statusSep2->setFrameStyle(QFrame::VLine);
-#ifndef Q_OS_MACOS
-    statusSep2->setFrameShadow(QFrame::Raised);
-#endif
+
     QFrame *statusSep3 = new QFrame(this);
     statusSep3->setObjectName("statusFrame");
     statusSep3->setFrameStyle(QFrame::VLine);
-#ifndef Q_OS_MACOS
-    statusSep3->setFrameShadow(QFrame::Raised);
-#endif
+
     QFrame *statusSep4 = new QFrame(this);
     statusSep4->setObjectName("statusFrame");
     statusSep4->setFrameStyle(QFrame::VLine);
-#ifndef Q_OS_MACOS
-    statusSep4->setFrameShadow(QFrame::Raised);
-#endif
+
+    QFrame *statusSep5 = new QFrame(this);
+    statusSep5->setObjectName("statusFrame");
+    statusSep5->setFrameStyle(QFrame::VLine);
 
     layout->addWidget(m_SOCKS5Lbl);
     layout->addWidget(statusSep1);
     layout->addWidget(m_HTTPLbl);
     layout->addWidget(statusSep2);
     layout->addWidget(m_PACLbl);
+    layout->addWidget(statusSep3);
+    layout->addWidget(m_NATLbl);
     layout->addWidget(statusSep4);
     layout->addWidget(m_dlSpeedLbl);
-    layout->addWidget(statusSep3);
+    layout->addWidget(statusSep5);
     layout->addWidget(m_upSpeedLbl);
 
     this->setSizeGripEnabled(false);
@@ -98,6 +98,11 @@ void StatusBar::refresh(QString localAddr, QList<int> ports, QList<QString> stat
 {
     updatePortStatus(localAddr, ports[0], ports[1], ports[2]);
     updateSpeedLabels(stats[0], stats[1], stats[2], stats[3]);
+}
+
+void StatusBar::refreshNatType(QString natType)
+{
+   m_NATLbl->setText(tr("NAT     %1").arg(natType));
 }
 
 void StatusBar::updatePortStatus(QString localAddr, int socks5Port, int httpPort, int pacPort)

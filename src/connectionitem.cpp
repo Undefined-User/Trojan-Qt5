@@ -1,4 +1,5 @@
 #include "connectionitem.h"
+#include "typehelper.h"
 #include <QFont>
 #include <cmath>
 
@@ -121,11 +122,11 @@ QString ConnectionItem::convertType(TQProfile profile)
     else if (profile.type == "http")
         return "HTTP";
     else if (profile.type == "ss")
-        return QString("SS / %1").arg(profile.plugin.split(".")[0].length() == 0 ? "NONE" : profile.plugin.split(".")[0].toUpper());
+        return QString("SS / %1").arg(TypeHelper::queryShadowsocksPluginName(profile.plugin));
     else if (profile.type == "ssr")
         return QString("SSR / %1").arg(profile.obfs.toUpper());
     else if (profile.type == "trojan")
-        return "TROJAN";
+        return QString("TROJAN / %1").arg(TypeHelper::queryTrojanType(profile.trojanGoSettings));
     else if (profile.type == "vmess")
         return QString("VMESS / %1").arg(profile.vmessSettings.network == "ws" ? "WEBSOCKET" : profile.vmessSettings.network.toUpper());
     else if (profile.type == "snell")

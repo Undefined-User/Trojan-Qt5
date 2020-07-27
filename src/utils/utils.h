@@ -4,6 +4,10 @@
 #include <QObject>
 #include "confighelper.h"
 
+#if defined (Q_OS_WIN)
+#include <Windows.h>
+#endif
+
 class Utils: public QObject
 {
     Q_OBJECT
@@ -32,7 +36,13 @@ public:
     static QList<WsHeader> convertQJsonObject(const QJsonObject &object);
     static QJsonObject convertWsHeader(QList<WsHeader> headers);
 
-    static void createProcessWithoutWindow(QString application, QString arg);
+#if defined (Q_OS_WIN)
+    static PROCESS_INFORMATION createProcessWithoutWindow(QString application, QString arg);
+#endif
+
+    static QString getSystemDirectory();
+    static QString getSystemVersion();
+    static QString getFileVersion(QString fName);
 
 };
 

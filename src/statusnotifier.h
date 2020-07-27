@@ -42,6 +42,7 @@ public:
     void onTrojanSubscribeSettings();
 #if defined (Q_OS_WIN)
     void onInstallTAPDriver();
+    void onEnableUWPLoopback();
 #endif
     void showServerSpeedPlot();
 
@@ -96,12 +97,14 @@ private:
 
     QAction *serverSpeedPlot;
     QMenu *copyTerminalProxyCommandMenu;
-    QAction *terminalWinStyle;
+    QAction *terminalWinCmdStyle;
+    QAction *terminalWinPowerShellStyle;
     QAction *terminalUnixStyle;
     QAction *setProxyToTelegram;
     QAction *minimiseRestoreAction;
 #if defined (Q_OS_WIN)
     QAction *installTapDriver;
+    QAction *enableUWPLoopback;
 #endif
     QSystemTrayIcon systray;
     MainWindow *window;

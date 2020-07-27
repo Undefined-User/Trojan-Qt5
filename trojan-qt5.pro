@@ -43,6 +43,9 @@ CONFIG += link_pkgconfig
 # deprecated API in order to know how to port your code away from it.
 #DEFINES += QT_DEPRECATED_WARNINGS
 
+# Remove Annoying Warning
+DEFINES += QT_NO_WARNING_OUTPUT
+
 # Define App Version
 DEFINES += "APP_VERSION=\"\\\"1.4.1\\\"\""
 
@@ -96,6 +99,8 @@ win32 {
     HEADERS += \
         src/urlscheme/urlschemeregister.h \
         src/systemproxy/win.h
+    RESOURCES += \
+        resources/windowsbin.qrc
     INCLUDEPATH += C:\TQLibraries\ZBar\include
     INCLUDEPATH += C:\TQLibraries\OpenSSL-Win32\include
     INCLUDEPATH += C:\TQLibraries\QREncode\include
@@ -104,7 +109,9 @@ win32 {
     INCLUDEPATH += C:\TQLibraries\Libuv\include
     INCLUDEPATH += C:\TQLibraries\Grpc\include
     INCLUDEPATH += C:\TQLibraries\Trojan-Qt5-Route\include
-    INCLUDEPATH += $$PWD/3rd/yaml-cpp/include
+    INCLUDEPATH += $$PWD\3rd\yaml-cpp\include
+    INCLUDEPATH += $$PWD\3rd\servicelib
+    INCLUDEPATH += $$PWD\3rd\nfsdk2
     LIBS += -LC:\TQLibraries\ZBar\lib -llibzbar-0
     LIBS += -LC:\TQLibraries\OpenSSL-Win32\lib -llibcrypto -llibssl
     LIBS += -LC:\TQLibraries\QREncode\lib -lqrcodelib
@@ -112,14 +119,14 @@ win32 {
     LIBS += -LC:\TQLibraries\Libsodium\lib -llibsodium
     LIBS += -LC:\TQLibraries\Libuv\lib -llibuv
     LIBS += -LC:\TQLibraries\Trojan-Qt5-Route\lib -lTrojan-Qt5-Route
+    LIBS += $$PWD\3rd\trojan-qt5-core\Trojan-Qt5-Core.lib
+    LIBS += $$PWD\3rd\nfsdk2\nfapi.lib
     LIBS += -lwsock32 -lws2_32 -luserenv -liphlpapi
     LIBS += -lCrypt32 -lkernel32 -lpsapi -luser32
+    LIBS += -lVersion
     DEFINES += WIN32_LEAN_AND_MEAN
-    LIBS += $$PWD\3rd\trojan-qt5-core\Trojan-Qt5-Core.lib
     QMAKE_CXXFLAGS_WARN_ON -= -w34100
     QMAKE_CXXFLAGS += -wd4251 -wd4996
-    # Otherwise lupdate will not work
-    TR_EXCLUDE += C:\TQLibraries\boost_1_72_0\*
 }
 
 mac {
@@ -146,6 +153,8 @@ mac {
         src/sparkle/AutoUpdater.h \
         src/sparkle/CocoaInitializer.h \
         src/sparkle/SparkleAutoUpdater.h
+    RESOURCES += \
+        resources/macosbin.qrc
     QMAKE_LFLAGS += -Wl,-rpath,@loader_path/../Frameworks
     QMAKE_CXXFLAGS += -DOBJC_OLD_DISPATCH_PROTOTYPES=1 # Enable strict checking of objc_msgsend calls = NO
     QMAKE_CXXFLAGS += -fno-objc-arc
@@ -167,6 +176,8 @@ unix:!mac {
     SOURCES += \
         src/statusnotifier.cpp \
         src/theme/themehelper.cpp
+    RESOURCES += \
+        resources/linuxbin.qrc
     LIBS += -lz
     # Otherwise lupdate will not work
     TR_EXCLUDE += /usr/local/boost/*
@@ -194,16 +205,23 @@ unix {
 
 SOURCES += \
     src/dialog/aboutdialog.cpp \
+    src/dialog/advancemodesettingsdialog.cpp \
     src/dialog/userrulesdialog.cpp \
     src/dialog/settingsdialog.cpp \
     src/dialog/sharedialog.cpp \
     src/dialog/uriinputdialog.cpp \
+    src/controller/nattypetestercontroller.cpp \
+    src/controller/nfsdk2controller.cpp \
     src/proxydialog/naiveproxyeditdialog.cpp \
     src/struct/configstruct.cpp \
     src/struct/trojangostruct.cpp \
     src/struct/v2raystruct.cpp \
+    src/utils/modehelper.cpp \
+    src/utils/nattypehelper.cpp \
+    src/utils/nfsdk2helper.cpp \
     src/utils/ntphelper.cpp \
     src/utils/tuntaphelper.cpp \
+    src/utils/typehelper.cpp \
     src/validator/generalvalidator.cpp \
     src/validator/ip4validator.cpp \
     src/validator/portvalidator.cpp \
@@ -235,7 +253,6 @@ SOURCES += \
     src/utils/routetablehelper.cpp \
     src/utils/utils.cpp \
     src/connectionsortfilterproxymodel.cpp \
-    src/haproxythread.cpp \
     src/logger.cpp \
     src/utils/midman.cpp \
     src/pac/pacserver.cpp \
@@ -253,27 +270,35 @@ SOURCES += \
     src/subscribemanager.cpp \
     src/tqprofile.cpp \
     src/tqsubscribe.cpp \
-    src/tun2socksthread.cpp \
+    src/proxy/tun2socksthread.cpp \
     src/subscribedialog.cpp \
     src/httpproxy.cpp \
     src/socketstream.cpp \
     src/extension/clickablelabel.cpp \
     src/extension/qtcolorpicker.cpp \
-    src/widget/trojangowidget.cpp
+    src/widget/trojangowidget.cpp \
+    src/dialog/modeeditdialog.cpp
 
 HEADERS += \
     src/dialog/aboutdialog.h \
+    src/dialog/advancemodesettingsdialog.h \
     src/dialog/userrulesdialog.h \
     src/dialog/settingsdialog.h \
     src/dialog/sharedialog.h \
     src/dialog/uriinputdialog.h \
+    src/controller/nattypetestercontroller.h \
+    src/controller/fsdk2controller.h \
     src/proxydialog/naiveproxyeditdialog.h \
     src/systemproxy/mac.h \
     src/struct/configstruct.h \
     src/struct/trojangostruct.h \
     src/struct/v2raystruct.h \
+    src/utils/modehelper.h \
+    src/utils/nattypehelper.h \
+    src/utils/nfsdk2helper.h \
     src/utils/ntphelper.h \
     src/utils/tuntaphelper.h \
+    src/utils/typehelper.h \
     src/validator/ip4validator.h \
     src/validator/portvalidator.h \
     src/validator/generalvalidator.h \
@@ -306,7 +331,6 @@ HEADERS += \
     src/proxydialog/trojaneditdialog.h \
     src/proxydialog/snelleditdialog.h \
     src/connectionsortfilterproxymodel.h \
-    src/haproxythread.h \
     src/logger.h \
     src/utils/midman.h \
     src/pac/pacserver.h \
@@ -324,15 +348,18 @@ HEADERS += \
     src/tqprofile.h \
     src/statusnotifier.h \
     src/tqsubscribe.h \
-    src/tun2socksthread.h \
+    src/proxy/tun2socksthread.h \
     src/subscribedialog.h \
     src/httpproxy.h \
     src/socketstream.h \
     src/extension/clickablelabel.h \
     src/extension/qtcolorpicker.h \
-    src/widget/trojangowidget.h
+    src/widget/trojangowidget.h \
+    src/dialog/modeeditdialog.h
 
 FORMS += \
+    ui/advancemodesettingsdialog.ui \
+    ui/modeeditdialog.ui \
     ui/naiveproxyeditdialog.ui \
     ui/httpeditdialog.ui \
     ui/socks5editdialog.ui \
@@ -374,6 +401,7 @@ headers.files = $${PROTOBUF_HEADERS}
 
 INCLUDEPATH += \
     $$PWD/src \
+    $$PWD/src/controller \
     $$PWD/src/dialog \
     $$PWD/src/proxy \
     $$PWD/src/proxyapi \
@@ -395,13 +423,16 @@ INCLUDEPATH += \
 qnx: target.path = /tmp/$${TARGET}/bin
 
 RESOURCES += \
-    resources/bin.qrc \
     resources/conf.qrc \
     resources/credits.qrc \
     resources/dat.qrc \
     resources/icons.qrc \
+    resources/linuxbin.qrc \
+    resources/macosbin.qrc \
+    resources/mode.qrc \
     resources/pac.qrc \
     resources/pem.qrc \
     resources/qss.qrc \
     resources/scripts.qrc \
-    resources/translations.qrc
+    resources/translations.qrc \
+    resources/windowsbin.qrc

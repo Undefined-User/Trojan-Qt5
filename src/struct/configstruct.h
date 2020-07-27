@@ -38,6 +38,7 @@ struct InboundSettings {
     int socks5LocalPort = 51837;
     int httpLocalPort = 58591;
     int pacLocalPort = 54400;
+    int redirectorPort = 56872;
     int haproxyStatusPort = 2080;
     int haproxyPort = 7777;
     operator QVariant() const
@@ -122,15 +123,14 @@ struct RouterSettings {
 Q_DECLARE_METATYPE(RouterSettings)
 
 struct CoreSettings {
-    int fingerprint = 2;
+    int fingerprint = 1;
     bool enableAPI = true;
     bool enableRouter = false;
     bool countOutboundTraffic = false;
     QString geoPath;
     int apiPort = 57721;
     QString trojanCertPath;
-    QString trojanCipher = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:AES128-SHA:AES256-SHA:DES-CBC3-SHA";
-    QString trojanCipherTLS13 = "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384";
+    QString trojanCipher = "";
     int bufferSize = 32;
     operator QVariant() const
     {
@@ -138,6 +138,41 @@ struct CoreSettings {
     }
 };
 Q_DECLARE_METATYPE(CoreSettings)
+
+struct TUNTAPSettings {
+    QString address = "240.0.0.2";
+    QString netmask = "255.255.255.0";
+    QString gateway = "240.0.0.1";
+    QString dns = "1.1.1.1";
+    bool customDNS = false;
+    bool fakeDNS = false;
+    QStringList bypassIPs;
+    operator QVariant() const
+    {
+        return QVariant::fromValue(*this);
+    }
+};
+Q_DECLARE_METATYPE(TUNTAPSettings)
+
+struct STUNSettings {
+    QString address = "stun.stunprotocol.org";
+    int port = 3478;
+    operator QVariant() const
+    {
+        return QVariant::fromValue(*this);
+    }
+};
+Q_DECLARE_METATYPE(STUNSettings)
+
+struct ModeSettings {
+    int mode = 0;
+    QString redirectorMode;
+    operator QVariant() const
+    {
+        return QVariant::fromValue(*this);
+    }
+};
+Q_DECLARE_METATYPE(ModeSettings)
 
 QDataStream& operator << (QDataStream &out, const GeneralSettings &g);
 QDataStream& operator >> (QDataStream &in, GeneralSettings &g);
@@ -162,5 +197,17 @@ QDataStream& operator >> (QDataStream &in, RouterSettings &r);
 
 QDataStream& operator << (QDataStream &out, const CoreSettings &c);
 QDataStream& operator >> (QDataStream &in, CoreSettings &c);
+
+QDataStream& operator << (QDataStream &out, const CoreSettings &c);
+QDataStream& operator >> (QDataStream &in, CoreSettings &c);
+
+QDataStream& operator << (QDataStream &out, const TUNTAPSettings &t);
+QDataStream& operator >> (QDataStream &in, TUNTAPSettings &t);
+
+QDataStream& operator << (QDataStream &out, const STUNSettings &s);
+QDataStream& operator >> (QDataStream &in, STUNSettings &s);
+
+QDataStream& operator << (QDataStream &out, const ModeSettings &m);
+QDataStream& operator >> (QDataStream &in, ModeSettings &m);
 
 #endif // CONFIGSTRUCT_H

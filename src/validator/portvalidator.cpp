@@ -23,6 +23,8 @@ QString PortValidator::isInUse(int port)
 {
     ConfigHelper *conf = Utils::getConfigHelper();
     QString addr = conf->getInboundSettings().enableIpv6Support ? (conf->getInboundSettings().shareOverLan ? "::" : "::1") : (conf->getInboundSettings().shareOverLan ? "0.0.0.0" : "127.0.0.1");
+    delete conf;
+    conf = nullptr;
 
     QTcpServer *server = new QTcpServer(); // Use TcpServer to listen to the port specified
     bool status = server->listen(QHostAddress(addr), port);

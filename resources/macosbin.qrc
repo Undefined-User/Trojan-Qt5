@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bin/proxy_conf_helper</file>
+    </qresource>
+</RCC>

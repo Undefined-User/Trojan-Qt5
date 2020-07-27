@@ -130,7 +130,7 @@ void RouteTableHelper::setRouteTable()
     CreateRoute("172.16.0.0", 12, adapter.gateWay.toUtf8().data(), adapter.index);
     CreateRoute("192.168.0.0", 16, adapter.gateWay.toUtf8().data(), adapter.index);
     // Put TUN/TAP Priority to the highest
-    Utils::createProcessWithoutWindow("netsh", QString("interface ip set interface %1 metric=0").arg(tuntap.index));
+    //Utils::createProcessWithoutWindow("netsh", QString("interface ip set interface %1 metric=0").arg(tuntap.index));
     // Create Default Route
     CreateRoute("0.0.0.0", 0, "10.0.0.1", tuntap.index, 10);
 #elif defined (Q_OS_MAC)

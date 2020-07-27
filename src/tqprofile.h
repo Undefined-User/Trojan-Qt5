@@ -79,7 +79,6 @@ struct TQProfile
     QString pluginParam;
     // trojan only
     QString sni;
-    bool verifyCertificate;
     bool reuseSession;
     bool sessionTicket;
     TrojanGoSettings trojanGoSettings;

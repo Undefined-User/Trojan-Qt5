@@ -131,3 +131,7 @@ QComboBox {
     font-weight: normal;
     color: rgb(0,0,0);
 }
+
+#redirectorModeCB {
+    combobox-popup: 0;
+}

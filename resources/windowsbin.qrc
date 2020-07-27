@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>bin/NatTypeTester.exe</file>
+        <file>bin/tap-windows-9.21.2.exe</file>
+        <file>bin/EnableLoopback.exe</file>
+        <file>bin/nfapi.dll</file>
+        <file>bin/Redirector.exe</file>
+        <file>bin/win7.sys</file>
+        <file>bin/win8.sys</file>
+        <file>bin/win10.sys</file>
+    </qresource>
+</RCC>

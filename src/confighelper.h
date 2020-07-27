@@ -54,6 +54,7 @@ public:
      * member variables.
      */
     void readGeneralSettings();
+    void readAdvanceModeSettings();
 
     void save(const ConnectionTableModel &model);
 
@@ -96,6 +97,7 @@ public:
     QJsonArray appendJsonArray(QJsonArray array1, QJsonArray array2);
     QString parseDomainStrategy(QString ds) const;
     QString parseTLSFingerprint(int choice) const;
+
     GeneralSettings getGeneralSettings() const;
     InboundSettings getInboundSettings() const;
     OutboundSettings getOutboundSettings() const;
@@ -104,13 +106,19 @@ public:
     RouterSettings getRouterSettings() const;
     SubscribeSettings getSubscribeSettings() const;
     CoreSettings getCoreSettings() const;
+    TUNTAPSettings getTUNTAPSettings() const;
+    STUNSettings getSTUNSettings() const;
+    ModeSettings getModeSettings() const;
     QString getSystemProxySettings() const;
+
     bool isTrojanOn() const;
     bool isEnableServerLoadBalance() const;
     bool isAutoUpdateSubscribes() const;
     bool isShowToolbar() const;
     bool isShowFilterBar() const;
+
     void setGeneralSettings(GeneralSettings gs, InboundSettings is, OutboundSettings os, TestSettings es, SubscribeSettings ss, GraphSettings fs, RouterSettings rs, CoreSettings cs);
+    void setAdvanceModeSettings(TUNTAPSettings ts, STUNSettings ss, ModeSettings ms);
     void setSystemProxySettings(QString mode);
     void setTrojanOn(bool on);
     void setAutoUpdateSubscribes(bool update);
@@ -141,6 +149,9 @@ private:
     RouterSettings routerSettings;
     SubscribeSettings subscribeSettings;
     CoreSettings coreSettings;
+    TUNTAPSettings tuntapSettings;
+    STUNSettings stunSettings;
+    ModeSettings modeSettings;
     QString systemProxyMode;
     bool trojanOn;
     bool serverLoadBalance;

@@ -37,6 +37,9 @@ AboutDialog::AboutDialog(QWidget *parent) :
         ui->youyun666Label->setUrl("https://youyun666.com/auth/register?code=FDqS");
         ui->marsAllianceLabel->setUrl("https://www.hxlm.org/#/register?code=a7cWmBDX");
     }
+
+    delete conf;
+    conf = nullptr;
 }
 
 AboutDialog::~AboutDialog()

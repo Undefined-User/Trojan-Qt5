@@ -28,6 +28,7 @@ ConfigHelper::ConfigHelper(const QString &configuration, QObject *parent) :
     Utils::setPermisison(configFile);
     settings = new QSettings(configFile, QSettings::IniFormat, this);
     readGeneralSettings();
+    readAdvanceModeSettings();
 }
 
 const QString ConfigHelper::profilePrefix = "Profile";
@@ -71,6 +72,9 @@ void ConfigHelper::save(const ConnectionTableModel &model)
     settings->setValue("RouterSettings", QVariant(routerSettings));
     settings->setValue("SubscribeSettings", QVariant(subscribeSettings));
     settings->setValue("CoreSettings", QVariant(coreSettings));
+    settings->setValue("TUNTAPSettings", QVariant(tuntapSettings));
+    settings->setValue("STUNSettings", QVariant(stunSettings));
+    settings->setValue("ModeSettings", QVariant(modeSettings));
 }
 
 void ConfigHelper::onConfigUpdateFromOldVersion()
@@ -128,7 +132,6 @@ void ConfigHelper::importGuiConfigJson(ConnectionTableModel *model, const QStrin
         p.name = json["remarks"].toString();
         p.serverPort = json["server_port"].toInt();
         p.serverAddress = json["server"].toString();
-        p.verifyCertificate = json["verify_certificate"].toBool();
         p.method = json["method"].toString();
         p.password = json["password"].toString();
         p.uuid = json["uuid"].toString();
@@ -161,7 +164,6 @@ void ConfigHelper::exportGuiConfigJson(const ConnectionTableModel &model, const 
         json["remarks"] = QJsonValue(con->profile.name);
         json["server"] = QJsonValue(con->profile.serverAddress);
         json["server_port"] = QJsonValue(con->profile.serverPort);
-        json["verify_certificate"] = QJsonValue(con->profile.verifyCertificate);
         json["method"] = QJsonValue(con->profile.method);
         json["password"] = QJsonValue(con->profile.password);
         json["uuid"] = QJsonValue(con->profile.uuid);
@@ -234,9 +236,6 @@ void ConfigHelper::importConfigYaml(ConnectionTableModel *model, const QString &
             p.obfsParam = QString::fromStdString(proxy["obfsparam"].as<string>());
         } else if (type == "trojan") {
             p.password = QString::fromStdString(proxy["password"].as<string>());
-            try {
-                p.verifyCertificate = !proxy["skip-cert-verify"].as<bool>();
-            } catch (...) {}
             try {
                 p.sni = QString::fromStdString(proxy["sni"].as<string>());
             } catch (...) {}
@@ -527,7 +526,6 @@ Connection* ConfigHelper::configJsonToConnection(const QString &file)
     p.serverPort = configObj["remote_port"].toInt();
     p.password = configObj["password"].toArray()[0].toString(); //only the first password will be used
     p.sni = configObj["ssl"].toObject()["sni"].toString();
-    p.verifyCertificate = configObj["verify"].toBool();
     p.reuseSession = configObj["ssl"].toObject()["reuse_session"].toBool();
     p.sessionTicket = configObj["ssl"].toObject()["session_ticket"].toBool();
     Connection *con = new Connection(p, this);
@@ -1042,11 +1040,12 @@ void ConfigHelper::generateTrojanJson(TQProfile &profile)
     configObj["log_level"] = generalSettings.logLevel;
     configObj["log_file"] = Utils::getLogDir() + "/core.log";
     QJsonObject ssl;
-    ssl["verify"] = profile.verifyCertificate;
+    ssl["verify"] = true;
     ssl["verify_hostname"] = true;
-    ssl["cert"] = coreSettings.trojanCertPath;
-    ssl["cipher"] = coreSettings.trojanCipher;
-    ssl["cipher_tls13"] = coreSettings.trojanCipherTLS13;
+    if (!coreSettings.trojanCertPath.isEmpty())
+        ssl["cert"] = coreSettings.trojanCertPath;
+    if (!coreSettings.trojanCipher.isEmpty())
+        ssl["cipher"] = coreSettings.trojanCipher;
     ssl["sni"] = profile.sni;
     QJsonArray alpnArray;
     alpnArray.append("h2");
@@ -1241,15 +1240,11 @@ QString ConfigHelper::parseTLSFingerprint(int choice) const
     case 0:
         return "";
     case 1:
-        return "auto";
-    case 2:
         return "firefox";
-    case 3:
+    case 2:
         return "chrome";
-    case 4:
+    case 3:
         return "ios";
-    case 5:
-        return "randomized";
     }
     return "";
 }
@@ -1324,6 +1319,21 @@ CoreSettings ConfigHelper::getCoreSettings() const
     return coreSettings;
 }
 
+TUNTAPSettings ConfigHelper::getTUNTAPSettings() const
+{
+    return tuntapSettings;
+}
+
+STUNSettings ConfigHelper::getSTUNSettings() const
+{
+    return stunSettings;
+}
+
+ModeSettings ConfigHelper::getModeSettings() const
+{
+    return modeSettings;
+}
+
 void ConfigHelper::setGeneralSettings(GeneralSettings gs, InboundSettings is, OutboundSettings os, TestSettings es, SubscribeSettings ss, GraphSettings fs, RouterSettings rs, CoreSettings cs)
 {
     if (gs.toolBarStyle != generalSettings.toolBarStyle) {
@@ -1337,6 +1347,13 @@ void ConfigHelper::setGeneralSettings(GeneralSettings gs, InboundSettings is, Ou
     graphSettings = fs;
     routerSettings = rs;
     coreSettings = cs;
+}
+
+void ConfigHelper::setAdvanceModeSettings(TUNTAPSettings ts, STUNSettings ss, ModeSettings ms)
+{
+    tuntapSettings = ts;
+    stunSettings = ss;
+    modeSettings = ms;
 }
 
 void ConfigHelper::setSystemProxySettings(QString mode)
@@ -1387,6 +1404,7 @@ void ConfigHelper::read(ConnectionTableModel *model)
     }
     settings->endArray();
     readGeneralSettings();
+    readAdvanceModeSettings();
 }
 
 QList<TQSubscribe> ConfigHelper::readSubscribes()
@@ -1426,8 +1444,23 @@ void ConfigHelper::readGeneralSettings()
     RouterSettings rSettings;
     routerSettings = settings->value("RouterSettings", QVariant(rSettings)).value<RouterSettings>();
     CoreSettings cSettings;
-    cSettings.geoPath = Utils::getConfigPath() + QDir::toNativeSeparators("/dat");
+    QString path = Utils::getConfigPath() + "/dat";
+    cSettings.geoPath = QDir::toNativeSeparators(path);
     coreSettings = settings->value("CoreSettings", QVariant(cSettings)).value<CoreSettings>();
+}
+
+void ConfigHelper::readAdvanceModeSettings()
+{
+    TUNTAPSettings tSettings;
+#if defined (Q_OS_WIN)
+    tSettings.address = "10.0.0.2";
+    tSettings.gateway = "10.0.0.1";
+#endif
+    tuntapSettings = settings->value("TUNTAPSettings", QVariant(tSettings)).value<TUNTAPSettings>();
+    STUNSettings sSettings;
+    stunSettings = settings->value("STUNSettings", QVariant(sSettings)).value<STUNSettings>();
+    ModeSettings mSettings;
+    modeSettings = settings->value("ModeSettings", QVariant(mSettings)).value<ModeSettings>();
 }
 
 void ConfigHelper::checkProfileDataUsageReset(TQProfile &profile)

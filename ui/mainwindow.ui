@@ -291,6 +291,7 @@
      <string>Settings</string>
     </property>
     <addaction name="actionGeneralSettings"/>
+    <addaction name="actionAdvanceModeSettings"/>
     <addaction name="actionUserRuleSerttings"/>
     <addaction name="separator"/>
     <addaction name="actionShowFilterBar"/>
@@ -849,6 +850,11 @@
   <action name="actionAdd_NaiveProxy_Manually">
    <property name="text">
     <string>Add NaiveProxy Manually</string>
+   </property>
+  </action>
+  <action name="actionAdvanceModeSettings">
+   <property name="text">
+    <string>Advance Mode Settings</string>
    </property>
   </action>
  </widget>

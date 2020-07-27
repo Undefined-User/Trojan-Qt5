@@ -118,6 +118,7 @@ private slots:
     void onMoveUp();
     void onMoveDown();
     void onGeneralSettings();
+    void onAdvanceModeSettings();
     void onUserRuleSettings();
     void checkCurrentIndex(const QModelIndex &index);
     void onAbout();
@@ -130,6 +131,7 @@ private slots:
     void onQRCodeCapturerResultFound(const QString &uris);
     void onCheckUpdate();
     void onStatusAvailable(QList<quint64> data);
+    void onNatTypeFinished(QString natType);
     void onSingleInstanceConnect();
 
 protected slots:

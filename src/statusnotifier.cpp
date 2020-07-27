@@ -133,12 +133,15 @@ void StatusNotifier::initActions()
     setProxyToTelegram = new QAction(tr("Set Proxy to Telegram"));
 #if defined (Q_OS_WIN)
     installTapDriver = new QAction(tr("Install TAP Driver"));
+    enableUWPLoopback = new QAction(tr("Enable UWP Loopback"));
 #endif
 
-    terminalWinStyle = new QAction(tr("Copy as Windows Style"));
+    terminalWinCmdStyle = new QAction(tr("Copy as Windows Cmd Style"));
+    terminalWinPowerShellStyle = new QAction(tr("Copy as Windows PowerShell Style"));
     terminalUnixStyle = new QAction(tr("Copy as Unix Style"));
 
-    copyTerminalProxyCommandMenu->addAction(terminalWinStyle);
+    copyTerminalProxyCommandMenu->addAction(terminalWinCmdStyle);
+    copyTerminalProxyCommandMenu->addAction(terminalWinPowerShellStyle);
     copyTerminalProxyCommandMenu->addAction(terminalUnixStyle);
 
     //setup systray Menu
@@ -150,13 +153,13 @@ void StatusNotifier::initActions()
     systrayMenu.addSeparator();
     systrayMenu.addMenu(serverMenu);
     systrayMenu.addMenu(subscribeMenu);
-    systrayMenu.addAction(serverLoadBalance);
-    systrayMenu.addSeparator();
     systrayMenu.addAction(serverSpeedPlot);
+    systrayMenu.addSeparator();
     systrayMenu.addMenu(copyTerminalProxyCommandMenu);
     systrayMenu.addAction(setProxyToTelegram);
 #if defined (Q_OS_WIN)
     systrayMenu.addAction(installTapDriver);
+    systrayMenu.addAction(enableUWPLoopback);
 #endif
     systrayMenu.addSeparator();
 
@@ -185,11 +188,13 @@ void StatusNotifier::initConnections()
     connect(updateSubscribe, &QAction::triggered, this, &StatusNotifier::onUpdateSubscribeWithProxy);
     connect(updateSubscribeBypass, &QAction::triggered, this, &StatusNotifier::onUpdateSubscribe);
     connect(serverSpeedPlot, &QAction::triggered, this, [this]() { showServerSpeedPlot(); });
-    connect(terminalWinStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("windows"); });
+    connect(terminalWinCmdStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("windows_cmd"); });
+    connect(terminalWinPowerShellStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("windows_powershell"); });
     connect(terminalUnixStyle, &QAction::triggered, this, [this]() { onCopyTerminalProxy("unix"); });
     connect(setProxyToTelegram, &QAction::triggered, this, [this]() { onSetProxyToTelegram(); });
 #if defined (Q_OS_WIN)
     connect(installTapDriver, &QAction::triggered, this, [this]() { onInstallTAPDriver(); });
+    connect(enableUWPLoopback, &QAction::triggered, this, [this]() { onEnableUWPLoopback(); });
 #endif
 }
 
@@ -322,16 +327,28 @@ void StatusNotifier::onToggleServerLoadBalance(bool checked)
 void StatusNotifier::onCopyTerminalProxy(QString type)
 {
     QClipboard *board = QApplication::clipboard();
-    if (helper->getInboundSettings().enableHttpMode)
-        if (type == "windows")
-            board->setText(QString("set HTTP_PROXY=http://127.0.0.1:%1; set HTTPS_PROXY=http://127.0.0.1:%1; set ALL_PROXY=socks5://127.0.0.1:%2").arg(helper->getInboundSettings().httpLocalPort).arg(helper->getInboundSettings().socks5LocalPort));
-        else if (type == "unix")
+    if (helper->getInboundSettings().enableHttpMode) {
+        if (type == "windows_cmd") {
+            board->setText(QString("set http_proxy=http://127.0.0.1:%1 & set https_proxy=http://127.0.0.1:%1").arg(helper->getInboundSettings().httpLocalPort));
+        }
+        else if (type == "windows_powershell") {
+            board->setText(QString("$Env:http_proxy=\"http://127.0.0.1:%1\";$Env:https_proxy=\"http://127.0.0.1:%1\"").arg(helper->getInboundSettings().httpLocalPort));
+        }
+        else if (type == "unix") {
             board->setText(QString("export HTTP_PROXY=http://127.0.0.1:%1; export HTTPS_PROXY=http://127.0.0.1:%1; export ALL_PROXY=socks5://127.0.0.1:%2").arg(helper->getInboundSettings().httpLocalPort).arg(helper->getInboundSettings().socks5LocalPort));
-    else
-        if (type == "windows")
-            board->setText(QString("set HTTP_PROXY=socks5://127.0.0.1:%1; sey HTTPS_PROXY=socks5://127.0.0.1:%1; set ALL_PROXY=socks5://127.0.0.1:%1").arg(helper->getInboundSettings().socks5LocalPort));
-        else if (type == "unix")
+        }
+    }
+    else {
+        if (type == "windows_cmd") {
+            board->setText(QString("set http_proxy=socks5://127.0.0.1:%1 & set https_proxy=socks5://127.0.0.1:%1").arg(helper->getInboundSettings().socks5LocalPort));
+        }
+        else if (type == "windows_powershell") {
+             board->setText(QString("$Env:http_proxy=\"socks5://127.0.0.1:%1\";$Env:https_proxy=\"socks5://127.0.0.1:%1\"").arg(helper->getInboundSettings().socks5LocalPort));
+        }
+        else if (type == "unix") {
             board->setText(QString("export HTTP_PROXY=socks5://127.0.0.1:%1; export HTTPS_PROXY=socks5://127.0.0.1:%1; export ALL_PROXY=socks5://127.0.0.1:%1").arg(helper->getInboundSettings().socks5LocalPort));
+        }
+    }
 }
 
 void StatusNotifier::onSetProxyToTelegram()
@@ -343,6 +360,11 @@ void StatusNotifier::onSetProxyToTelegram()
 void StatusNotifier::onInstallTAPDriver()
 {
     ResourceHelper::installTAPDriver();
+}
+
+void StatusNotifier::onEnableUWPLoopback()
+{
+    ResourceHelper::openEnableUWPLoopback();
 }
 #endif
 
